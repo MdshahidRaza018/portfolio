@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import emailjs from "emailjs-com";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import BlurCircle from "./BlurCircle";
@@ -12,6 +12,8 @@ const Contact = () => {
     message: ""
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -19,26 +21,32 @@ const Contact = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    try {
-      const res = await axios.post(
-        "http://localhost:5000/api/contact",
-        form
-      );
+    emailjs.send(
+       "service_cs3csxx",   
+        "template_sx1rtnh",  
+        form,
+        "vouyJo_mOPVS4_VsN" 
+    )
+    .then(() => {
+      alert("Message sent successfully ");
 
-      alert(res.data.message);
       setForm({
         name: "",
         email: "",
         message: ""
       });
 
-    } catch (error) {
+      setLoading(false);
+    })
+    .catch((error) => {
       console.log(error);
-      alert("Something went wrong");
-    }
+      alert("Failed to send ");
+      setLoading(false);
+    });
   };
 
   return (
@@ -73,15 +81,15 @@ const Contact = () => {
 
           {/* Social */}
           <div className="flex gap-4">
-            <a href="https://www.linkedin.com/in/md-shahid-raza-190b96245?utm_source=share_via&utm_content=profile&utm_medium=member_android" className="w-10 h-10 text-xl font-bold flex items-center justify-center rounded-full bg-card hover:border hover:border-accent">
+            <a href="https://www.linkedin.com/in/md-shahid-raza-190b96245" className="w-10 h-10 text-xl font-bold flex items-center justify-center rounded-full bg-card hover:border hover:border-accent">
               in
             </a>
 
-            <a href="https://www.instagram.com/mdshahid.raza_018?igsh=Y21jYXN6bjU3Ymd5" className="w-10 h-10 flex items-center justify-center rounded-full bg-card hover:border hover:border-accent">
+            <a href="https://www.instagram.com/mdshahid.raza_018" className="w-10 h-10 flex items-center justify-center rounded-full bg-card hover:border hover:border-accent">
               <InstagramIcon />
             </a>
 
-            <a href="https://github.com/MdshahidRaza018"className="w-10 h-10 flex items-center justify-center rounded-full bg-card hover:border hover:border-accent">
+            <a href="https://github.com/MdshahidRaza018" className="w-10 h-10 flex items-center justify-center rounded-full bg-card hover:border hover:border-accent">
               <GitHubIcon />
             </a>
           </div>
@@ -101,6 +109,7 @@ const Contact = () => {
               value={form.name}
               onChange={handleChange}
               placeholder="Name"
+              required
               className="w-full mt-2 bg-bg border border-white/10 rounded-lg px-4 py-3 outline-none focus:border-accent"
             />
           </div>
@@ -113,6 +122,7 @@ const Contact = () => {
               value={form.email}
               onChange={handleChange}
               placeholder="gmail.com"
+              required
               className="w-full mt-2 bg-bg border border-white/10 rounded-lg px-4 py-3 outline-none focus:border-accent"
             />
           </div>
@@ -125,21 +135,23 @@ const Contact = () => {
               value={form.message}
               onChange={handleChange}
               placeholder="Tell me about your project..."
+              required
               className="w-full mt-2 bg-bg border border-white/10 rounded-lg px-4 py-3 outline-none focus:border-accent resize-none"
             />
           </div>
 
           <button
             type="submit"
+            disabled={loading}
             className="bg-gradient-to-r from-black to-blue-800 px-8 py-3 rounded-full hover:opacity-90"
           >
-            Send Message
+            {loading ? "Sending..." : "Send Message"}
           </button>
 
         </form>
       </div>
-        <BlurCircle top="250rem" left="0"/>
 
+      <BlurCircle top="250rem" left="0"/>
     </section>
   );
 };
