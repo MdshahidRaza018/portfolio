@@ -12,7 +12,7 @@ const Dashboard = () => {
       try {
         const password = prompt("Enter admin password");
 
-        const res = await axios.post("https://your-backend.onrender.com/api/admin/login", {
+        const res = await axios.post("https://portfolio-mdshahidraza.vercel.app/api/admin/login", {
           password
         });
 
@@ -31,7 +31,7 @@ const Dashboard = () => {
 
   const fetchMessages = async () => {
     try {
-      const res = await axios.get("https://your-backend.onrender.com/api/messages");
+      const res = await axios.get("https://portfolio-mdshahidraza.vercel.app/messages");
       setMessages(res.data);
     } catch (err) {
       console.log(err);
